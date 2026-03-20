@@ -1,0 +1,134 @@
+:root {
+  color-scheme: light;
+  --bg: #0b0f14;
+  --panel: #111824;
+  --panel-border: rgba(255, 255, 255, 0.06);
+  --text: #e6edf3;
+  --muted: #8b9bb4;
+  --accent: #2fd4d8;
+  --accent-dark: #1a8a8f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Sora", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #1b2735, #0b0f14 55%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--panel-border);
+  background: rgba(11, 15, 20, 0.9);
+  backdrop-filter: blur(12px);
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.brand-subtitle {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.file input {
+  display: none;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #081116;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+canvas {
+  width: min(92vw, 1200px);
+  height: min(70vh, 720px);
+  border-radius: 20px;
+  border: 1px solid var(--panel-border);
+  background: #0a0d12;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+.hint {
+  position: absolute;
+  bottom: 2rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(17, 24, 36, 0.85);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.footer {
+  padding: 1rem 2rem 1.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+@media (max-width: 800px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  canvas {
+    width: 100%;
+    height: 65vh;
+  }
+}

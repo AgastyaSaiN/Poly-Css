@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polygon CSS JSON Physics Viewer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-title">Polygon CSS</div>
+          <div class="brand-subtitle">JSON Triangle Physics Viewer</div>
+        </div>
+        <div class="controls">
+          <label class="file">
+            <input id="file-input" type="file" accept="application/json" />
+            <span>Load JSON</span>
+          </label>
+          <button id="reset" class="btn">Reset</button>
+        </div>
+      </header>
+
+      <section class="stage">
+        <canvas id="canvas"></canvas>
+        <div id="hint" class="hint">Load a JSON export and move your mouse to push triangles.</div>
+      </section>
+
+      <footer class="footer">
+        <div>Drag to push. Triangles spring back when you move away.</div>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
