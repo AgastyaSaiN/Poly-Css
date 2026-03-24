@@ -1,9 +1,10 @@
 # PolyCss
 
-Two small browser apps that work together:
+Three small browser apps that work together:
 
 1. **Low‑poly generator** — import an image and export a triangle JSON file (plus PNG preview).
 2. **JSON physics viewer** — load that JSON and interact with it; triangles push away from the cursor and spring back.
+3. **Correct Low Poly JSON** — load JSON, inspect/select triangles, fix colors, export corrected JSON.
 
 ## Projects
 
@@ -37,6 +38,21 @@ python -m http.server 5173
 ```
 Open `http://localhost:5173` and load a JSON file.
 
+### 3) Correct Low Poly JSON
+Location: `json-editor/`
+
+What it does:
+- Loads a JSON export from the generator
+- Lets you select triangles and inspect properties
+- Edit triangle color and export corrected JSON
+
+Run it:
+```bash
+cd "json-editor"
+python -m http.server 5174
+```
+Open `http://localhost:5174`.
+
 ## JSON format (export)
 ```json
 {
@@ -54,7 +70,7 @@ Open `http://localhost:5173` and load a JSON file.
 ```
 
 Notes:
-- `canvas.width/height` is the native resolution used by the viewer.
+- `canvas.width/height` is the native resolution used by the viewer/editor.
 - Triangles are currently grid‑generated (not Delaunay).
 
 ## Credits
@@ -65,5 +81,6 @@ Original work by Charles Ojukwu (cojdev). Links kept in the UI header/footer and
 ## What We Changed
 - Added JSON export for triangle metadata (vertices, centroid, color)
 - Built a separate JSON physics viewer with hover‑repel and spring‑back
+- Built a JSON editor to correct individual triangle colors
 - Adjusted styling to differentiate the UI
 - Updated documentation and project structure

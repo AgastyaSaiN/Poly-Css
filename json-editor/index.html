@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Correct Low Poly JSON</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-title">Correct Low Poly JSON</div>
+          <div class="brand-subtitle">Select triangles, edit colors, export JSON</div>
+        </div>
+        <div class="controls">
+          <label class="file">
+            <input id="file-input" type="file" accept="application/json" />
+            <span>Load JSON</span>
+          </label>
+          <button id="export" class="btn">Export JSON</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel">
+          <h2>Selection</h2>
+          <div id="selection-empty" class="muted">Click a triangle to inspect it.</div>
+          <div id="selection-details" class="details hidden">
+            <div class="row"><span>ID</span><span id="prop-id"></span></div>
+            <div class="row"><span>Centroid</span><span id="prop-centroid"></span></div>
+            <div class="row"><span>Vertices</span></div>
+            <pre id="prop-vertices"></pre>
+            <div class="row"><span>Color</span><span id="prop-color"></span></div>
+            <label class="color-picker">
+              <span>Pick Color</span>
+              <input id="color-input" type="color" />
+            </label>
+            <div class="row actions">
+              <button id="apply-color" class="btn secondary">Apply Color</button>
+              <button id="copy-color" class="btn ghost">Copy</button>
+              <button id="paste-color" class="btn ghost">Paste</button>
+              <button id="undo" class="btn ghost">Undo</button>
+              <button id="redo" class="btn ghost">Redo</button>
+            </div>
+            <div class="muted" id="clipboard-status"></div>
+          </div>
+        </aside>
+
+        <section class="stage">
+          <div class="canvas-wrap">
+            <canvas id="canvas"></canvas>
+          </div>
+          <div id="hint" class="hint">Load a JSON export to begin. Scroll to zoom, use scrollbars to pan.</div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
