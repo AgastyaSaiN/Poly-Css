@@ -17,6 +17,7 @@ const copyColorBtn = document.getElementById('copy-color');
 const pasteColorBtn = document.getElementById('paste-color');
 const undoBtn = document.getElementById('undo');
 const redoBtn = document.getElementById('redo');
+const deleteBtn = document.getElementById('delete-triangle');
 const clipboardStatus = document.getElementById('clipboard-status');
 
 let data = null;
@@ -222,12 +223,34 @@ const setTriangleColor = (index, rgb, record = true) => {
   }
 
   if (record) {
-    history.push({ index, prev: { ...prev }, next: { ...rgb } });
+    history.push({ type: 'color', index, prev: { ...prev }, next: { ...rgb } });
     redoStack = [];
   }
 
   triangles[index].color = { ...rgb };
   data.triangles[index].color = { ...rgb };
+  updateSelectionUI();
+  draw();
+};
+
+const deleteTriangle = (index, record = true) => {
+  if (index === -1) return;
+  const removed = triangles[index];
+  if (!removed) return;
+
+  if (record) {
+    history.push({
+      type: 'delete',
+      index,
+      triangle: JSON.parse(JSON.stringify(removed)),
+    });
+    redoStack = [];
+  }
+
+  triangles.splice(index, 1);
+  data.triangles.splice(index, 1);
+
+  selectedIndex = -1;
   updateSelectionUI();
   draw();
 };
@@ -327,14 +350,40 @@ undoBtn.addEventListener('click', () => {
   const last = history.pop();
   if (!last) return;
   redoStack.push(last);
-  setTriangleColor(last.index, last.prev, false);
+  if (last.type === 'color') {
+    setTriangleColor(last.index, last.prev, false);
+  } else if (last.type === 'delete') {
+    triangles.splice(last.index, 0, last.triangle);
+    data.triangles.splice(last.index, 0, last.triangle);
+    selectedIndex = last.index;
+    updateSelectionUI();
+    draw();
+  }
 });
 
 redoBtn.addEventListener('click', () => {
   const item = redoStack.pop();
   if (!item) return;
   history.push(item);
-  setTriangleColor(item.index, item.next, false);
+  if (item.type === 'color') {
+    setTriangleColor(item.index, item.next, false);
+  } else if (item.type === 'delete') {
+    deleteTriangle(item.index, false);
+  }
+});
+
+deleteBtn.addEventListener('click', () => {
+  if (selectedIndex === -1) return;
+  deleteTriangle(selectedIndex, true);
+});
+
+window.addEventListener('keydown', (event) => {
+  if (selectedIndex === -1) return;
+  if (event.key === 'Delete' || event.key === 'Backspace') {
+    const tag = document.activeElement?.tagName?.toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    deleteTriangle(selectedIndex, true);
+  }
 });
 
 exportBtn.addEventListener('click', () => {

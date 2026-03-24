@@ -92,6 +92,11 @@ body {
   border: 1px solid rgba(31, 41, 55, 0.15);
 }
 
+.btn.ghost.danger {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.3);
+}
+
 .workspace {
   display: grid;
   grid-template-columns: 320px 1fr;
