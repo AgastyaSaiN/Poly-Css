@@ -120,11 +120,13 @@ const loadJson = async (file) => {
     throw new Error('Invalid JSON format.');
   }
 
-  baseTriangles = data.triangles.map((tri) => ({
-    vertices: tri.vertices.map((v) => [v[0], v[1]]),
-    centroid: { x: tri.centroid[0], y: tri.centroid[1] },
-    color: tri.color,
-  }));
+  baseTriangles = data.triangles
+    .filter((tri) => (tri.color?.a ?? 255) > 0)
+    .map((tri) => ({
+      vertices: tri.vertices.map((v) => [v[0], v[1]]),
+      centroid: { x: tri.centroid[0], y: tri.centroid[1] },
+      color: tri.color,
+    }));
 
   bodies = baseTriangles.map((tri) => ({
     centroid: { ...tri.centroid },

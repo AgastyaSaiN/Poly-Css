@@ -25,6 +25,8 @@
       <main class="workspace">
         <aside class="panel">
           <h2>Selection</h2>
+          <div class="row"><span>Polygons</span><span id="polygon-count">0</span></div>
+          <div class="row"><span>Visible</span><span id="visible-count">0</span></div>
           <div id="selection-empty" class="muted">Click a triangle to inspect it.</div>
           <div id="selection-details" class="details hidden">
             <div class="row"><span>ID</span><span id="prop-id"></span></div>
@@ -43,6 +45,7 @@
               <button id="undo" class="btn ghost">Undo</button>
               <button id="redo" class="btn ghost">Redo</button>
               <button id="delete-triangle" class="btn ghost danger">Delete</button>
+              <button id="cleanup-transparent" class="btn ghost">Remove Empty</button>
             </div>
             <div class="muted" id="clipboard-status"></div>
           </div>

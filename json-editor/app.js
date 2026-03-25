@@ -11,6 +11,8 @@ const propId = document.getElementById('prop-id');
 const propCentroid = document.getElementById('prop-centroid');
 const propVertices = document.getElementById('prop-vertices');
 const propColor = document.getElementById('prop-color');
+const polygonCount = document.getElementById('polygon-count');
+const visibleCount = document.getElementById('visible-count');
 const colorInput = document.getElementById('color-input');
 const applyColorBtn = document.getElementById('apply-color');
 const copyColorBtn = document.getElementById('copy-color');
@@ -18,6 +20,7 @@ const pasteColorBtn = document.getElementById('paste-color');
 const undoBtn = document.getElementById('undo');
 const redoBtn = document.getElementById('redo');
 const deleteBtn = document.getElementById('delete-triangle');
+const cleanupBtn = document.getElementById('cleanup-transparent');
 const clipboardStatus = document.getElementById('clipboard-status');
 
 let data = null;
@@ -89,6 +92,10 @@ const draw = () => {
 };
 
 const updateSelectionUI = () => {
+  polygonCount.textContent = String(triangles.length);
+  visibleCount.textContent = String(
+    triangles.filter((tri) => (tri.color?.a ?? 255) > 0).length
+  );
   if (selectedIndex === -1) {
     selectionEmpty.classList.remove('hidden');
     selectionDetails.classList.add('hidden');
@@ -255,6 +262,35 @@ const deleteTriangle = (index, record = true) => {
   draw();
 };
 
+const cleanupTransparent = (threshold = 0, record = true) => {
+  if (!triangles.length) return;
+
+  const removed = [];
+  for (let i = triangles.length - 1; i >= 0; i--) {
+    const alpha = triangles[i].color?.a ?? 255;
+    if (alpha <= threshold) {
+      removed.push({ index: i, triangle: triangles[i] });
+      triangles.splice(i, 1);
+      data.triangles.splice(i, 1);
+    }
+  }
+
+  if (!removed.length) {
+    setStatus('No empty polygons.');
+    return;
+  }
+
+  if (record) {
+    history.push({ type: 'cleanup', removed, threshold });
+    redoStack = [];
+  }
+
+  selectedIndex = -1;
+  updateSelectionUI();
+  draw();
+  setStatus(`Removed ${removed.length} polygons.`);
+};
+
 const applyColorFromHex = (hex) => {
   if (selectedIndex === -1) return;
   const rgb = hexToRgb(hex);
@@ -358,6 +394,15 @@ undoBtn.addEventListener('click', () => {
     selectedIndex = last.index;
     updateSelectionUI();
     draw();
+  } else if (last.type === 'cleanup') {
+    const restored = [...last.removed].sort((a, b) => a.index - b.index);
+    for (const item of restored) {
+      triangles.splice(item.index, 0, item.triangle);
+      data.triangles.splice(item.index, 0, item.triangle);
+    }
+    selectedIndex = -1;
+    updateSelectionUI();
+    draw();
   }
 });
 
@@ -369,12 +414,25 @@ redoBtn.addEventListener('click', () => {
     setTriangleColor(item.index, item.next, false);
   } else if (item.type === 'delete') {
     deleteTriangle(item.index, false);
+  } else if (item.type === 'cleanup') {
+    const removeAgain = [...item.removed].sort((a, b) => b.index - a.index);
+    for (const entry of removeAgain) {
+      triangles.splice(entry.index, 1);
+      data.triangles.splice(entry.index, 1);
+    }
+    selectedIndex = -1;
+    updateSelectionUI();
+    draw();
   }
 });
 
 deleteBtn.addEventListener('click', () => {
   if (selectedIndex === -1) return;
   deleteTriangle(selectedIndex, true);
+});
+
+cleanupBtn.addEventListener('click', () => {
+  cleanupTransparent(0, true);
 });
 
 window.addEventListener('keydown', (event) => {
